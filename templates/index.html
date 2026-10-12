@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vihara Tech | AI Salary Predictor</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+        /* ========== RESET ========== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --background: #080d1b;
+            --surface: #10182b;
+            --surface-light: #17223b;
+            --cyan: #48e5ff;
+            --purple: #a78bfa;
+            --white: #f1f5ff;
+            --muted: #91a0bd;
+            --border: rgba(148, 163, 184, 0.16);
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: var(--white);
+            background:
+                radial-gradient(
+                    ellipse at 8% 5%,
+                    rgba(72, 229, 255, 0.12),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    ellipse at 95% 90%,
+                    rgba(167, 139, 250, 0.13),
+                    transparent 35%
+                ),
+                var(--background);
+            padding: 25px;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        /* ========== NAVIGATION ========== */
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            color: var(--background);
+            background: linear-gradient(
+                135deg,
+                var(--cyan),
+                var(--purple)
+            );
+            font-size: 22px;
+            font-weight: 800;
+            box-shadow: 0 0 25px rgba(72, 229, 255, 0.18);
+        }
+
+        .brand-name {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+        }
+
+        .brand-name span {
+            color: var(--cyan);
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            color: var(--muted);
+            background: rgba(16, 24, 43, 0.65);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6ee7b7;
+            box-shadow: 0 0 10px #6ee7b7;
+        }
+
+        /* ========== MAIN LAYOUT ========== */
+
+        .dashboard {
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 0.92fr;
+            gap: 35px;
+            align-items: stretch;
+        }
+
+        /* ========== LEFT INTRODUCTION ========== */
+
+        .intro {
+            padding: 35px 10px 25px 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .eyebrow {
+            width: fit-content;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 13px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(72, 229, 255, 0.23);
+            border-radius: 8px;
+            background: rgba(72, 229, 255, 0.06);
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+        }
+
+        .intro h1 {
+            max-width: 600px;
+            font-size: clamp(38px, 5vw, 64px);
+            line-height: 1.12;
+            letter-spacing: -2.5px;
+            font-weight: 800;
+        }
+
+        .intro h1 span {
+            display: block;
+            color: transparent;
+            background: linear-gradient(
+                100deg,
+                var(--cyan),
+                var(--purple)
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        .intro-text {
+            max-width: 480px;
+            margin-top: 23px;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        /* ========== FEATURE CARDS ========== */
+
+        .features {
+            margin-top: 35px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .feature {
+            min-height: 100px;
+            padding: 19px;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: linear-gradient(
+                135deg,
+                rgba(23, 34, 59, 0.85),
+                rgba(16, 24, 43, 0.7)
+            );
+            transition: 0.25s ease;
+        }
+
+        .feature:hover {
+            border-color: rgba(72, 229, 255, 0.45);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 21px;
+        }
+
+        .feature h3 {
+            margin-top: 10px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .feature p {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* ========== PREDICTION PANEL ========== */
+
+        .prediction-card {
+            position: relative;
+            overflow: hidden;
+            padding: 32px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 23px;
+            background: linear-gradient(
+                145deg,
+                rgba(19, 29, 51, 0.96),
+                rgba(12, 19, 35, 0.98)
+            );
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.28);
+        }
+
+        .prediction-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 12%;
+            right: 12%;
+            height: 2px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--cyan),
+                var(--purple),
+                transparent
+            );
+        }
+
+        .card-heading {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .card-heading h2 {
+            font-size: 23px;
+            letter-spacing: -0.7px;
+        }
+
+        .card-heading p {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .card-icon {
+            flex-shrink: 0;
+            width: 47px;
+            height: 47px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(167, 139, 250, 0.3);
+            border-radius: 14px;
+            background: rgba(167, 139, 250, 0.1);
+            font-size: 23px;
+        }
+
+        /* ========== FORM ========== */
+
+        .input-label {
+            display: block;
+            margin-bottom: 11px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container input {
+            width: 100%;
+            min-height: 59px;
+            padding: 16px 55px 16px 17px;
+            border: 1px solid #303d58;
+            border-radius: 12px;
+            outline: none;
+            background: #0b1222;
+            color: var(--white);
+            font-size: 15px;
+            transition: 0.25s;
+        }
+
+        .input-container input::placeholder {
+            color: #64718d;
+        }
+
+        .input-container input:focus {
+            border-color: var(--cyan);
+            box-shadow: 0 0 0 4px rgba(72, 229, 255, 0.08);
+        }
+
+        .input-suffix {
+            position: absolute;
+            top: 50%;
+            right: 17px;
+            transform: translateY(-50%);
+            color: var(--cyan);
+            font-size: 12px;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .helper-text {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .predict-button {
+            width: 100%;
+            min-height: 57px;
+            margin-top: 25px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(
+                100deg,
+                #35cde8,
+                #7897ff,
+                #a78bfa
+            );
+            color: #08101f;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .predict-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(72, 229, 255, 0.2);
+        }
+
+        .predict-button:active {
+            transform: translateY(0);
+        }
+
+        /* ========== RESULT PANEL ========== */
+
+        .result {
+            margin-top: 25px;
+            padding: 22px;
+            border: 1px solid rgba(72, 229, 255, 0.23);
+            border-radius: 15px;
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(72, 229, 255, 0.1),
+                    transparent 60%
+                ),
+                #0b1426;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--cyan);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        .result-value {
+            margin-top: 15px;
+            overflow-wrap: anywhere;
+            font-size: clamp(25px, 4vw, 36px);
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--white);
+        }
+
+        .result-note {
+            margin-top: 9px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        .error {
+            margin-top: 20px;
+            padding: 14px;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 10px;
+            background: rgba(127, 29, 29, 0.2);
+            color: #fca5a5;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* ========== PROJECT AUTHOR ========== */
+
+        .author {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border);
+        }
+
+        .author-avatar {
+            width: 43px;
+            height: 43px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(72, 229, 255, 0.25);
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                rgba(72, 229, 255, 0.17),
+                rgba(167, 139, 250, 0.2)
+            );
+            color: var(--cyan);
+            font-weight: 800;
+        }
+
+        .author h3 {
+            font-size: 13px;
+        }
+
+        .author h3 span {
+            color: var(--cyan);
+        }
+
+        .author p {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        /* ========== FOOTER ========== */
+
+        footer {
+            max-width: 1200px;
+            margin: 35px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            color: #6f7c97;
+            font-size: 11px;
+        }
+
+        footer strong {
+            color: var(--cyan);
+        }
+
+        /* ========== ANIMATION ========== */
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========== RESPONSIVE DESIGN ========== */
+
+        @media (max-width: 900px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+                max-width: 650px;
+                gap: 25px;
+            }
+
+            .intro {
+                padding: 10px 0;
+            }
+
+            .intro h1 {
+                max-width: 650px;
+            }
+
+            .navbar {
+                margin-bottom: 25px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 18px 13px;
+            }
+
+            .nav-status {
+                padding: 9px;
+                font-size: 10px;
+            }
+
+            .brand {
+                gap: 8px;
+            }
+
+            .brand-name {
+                font-size: 15px;
+            }
+
+            .brand-icon {
+                width: 38px;
+                height: 38px;
+            }
+
+            .intro h1 {
+                font-size: 41px;
+                letter-spacing: -1.8px;
+            }
+
+            .intro-text {
+                font-size: 13px;
+            }
+
+            .features {
+                gap: 10px;
+            }
+
+            .feature {
+                padding: 14px;
+            }
+
+            .prediction-card {
+                padding: 22px 17px;
+            }
+
+            .card-heading h2 {
+                font-size: 20px;
+            }
+
+            footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="brand">
+            <div class="brand-icon">V</div>
+
+            <div class="brand-name">
+                VIHARA <span>TECH</span>
+            </div>
+        </div>
+
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            ML PROJECT
+        </div>
+    </nav>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard">
+
+        <!-- Left Introduction Panel -->
+        <section class="intro">
+
+            <div class="eyebrow">
+                <span>✦</span>
+                MACHINE LEARNING
+            </div>
+
+            <h1>
+                Predict your
+                <span>future salary.</span>
+            </h1>
+
+            <p class="intro-text">
+                Discover an estimated salary based on your professional
+                experience. This application uses a trained Simple Linear
+                Regression model to generate predictions from your input.
+            </p>
+
+            <div class="features">
+
+                <div class="feature">
+                    <div class="feature-icon">📈</div>
+                    <h3>Linear Regression</h3>
+                    <p>A machine learning model for salary estimation.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Prediction</h3>
+                    <p>Enter your experience and view the model output.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Data Science</h3>
+                    <p>Predictive analytics using a trained model.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Simple Interface</h3>
+                    <p>A clean form for entering your experience.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Right Prediction Panel -->
+        <section class="prediction-card">
+
+            <div class="card-heading">
+                <div>
+                    <h2>Salary Predictor</h2>
+                    <p>
+                        Enter your details below to generate a prediction.
+                    </p>
+                </div>
+
+                <div class="card-icon">💼</div>
+            </div>
+
+            <!-- Flask Form -->
+            <form action="{{ url_for('predict') }}" method="POST">
+
+                <label class="input-label" for="experience">
+                    Years of Experience
+                </label>
+
+                <div class="input-container">
+                    <input
+                        type="number"
+                        id="experience"
+                        name="experience"
+                        placeholder="e.g. 3.5"
+                        min="0"
+                        max="100"
+                        step="any"
+                        value="{{ experience if experience is not none else '' }}"
+                        required
+                    >
+
+                    <span class="input-suffix">YEARS</span>
+                </div>
+
+                <p class="helper-text">
+                    Enter your total professional experience in years.
+                    You can use decimal values such as 2.5.
+                </p>
+
+                <button class="predict-button" type="submit">
+                    <span>Generate Prediction</span>
+                    <span>→</span>
+                </button>
+
+            </form>
+
+            <!-- Predicted Salary -->
+            {% if prediction_text is not none %}
+            <div class="result" aria-live="polite">
+
+                <div class="result-heading">
+                    <span>✦</span>
+                    PREDICTION COMPLETE
+                </div>
+
+                <div class="result-value">
+                    ₹ {{ prediction_text }}
+                </div>
+
+                <p class="result-note">
+                    Estimated output from your trained regression model.
+                    This is a model prediction, not a guaranteed salary.
+                </p>
+
+            </div>
+            {% endif %}
+
+            <!-- Error Message -->
+            {% if error_message %}
+            <div class="error" role="alert">
+                ⚠ {{ error_message }}
+            </div>
+            {% endif %}
+
+            <!-- Author Information -->
+            <div class="author">
+
+                <div class="author-avatar">S</div>
+
+                <div>
+                    <h3>
+                        Project by <span>Sanvitha</span>
+                    </h3>
+
+                    <p>Data Science Student</p>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            © 2026 <strong>Vihara Tech</strong>
+            · Salary Prediction System
+        </div>
+
+        <div>
+            Powered by Simple Linear Regression
+        </div>
+    </footer>
+
+    <script>
+        const form = document.querySelector("form");
+        const button = document.querySelector(".predict-button");
+
+        if (form && button) {
+            form.addEventListener("submit", function () {
+                if (form.checkValidity()) {
+                    button.disabled = true;
+                    button.innerHTML = "<span>Predicting...</span><span>⌛</span>";
+                    button.style.opacity = "0.8";
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
